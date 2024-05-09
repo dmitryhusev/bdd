@@ -3,7 +3,7 @@ import requests
 import pytest
 
 
-@pytest.mark.skipif(1>0, reason="Reason")
+@pytest.mark.skipif(1==0, reason="Reason")
 @scenario('test.feature', 'user sign up and login')
 def test_user():
     pass

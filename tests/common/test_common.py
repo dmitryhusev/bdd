@@ -1,6 +1,6 @@
 import requests
 import pytest
-import os
+
 
 def sign_up():
     res = requests.get('http://httpbin.org/get')
