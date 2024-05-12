@@ -1,20 +1,20 @@
-from copy import deepcopy
+from pprint import pprint
 
 
-kw = dict(
+dict1 = dict(
     name='mum',
     act='running',
-    city='zhyt'
+    city='zhyt',
 )
 
-dict1 = {
-    "oid": "b6b26982a97bdc67eb0d6c400d485ab28fa49d9d",
+dict2 = {
+    "city": "zhyt",
     "url": "/dmitryhusev/qa-challenge/commit/b6b26982a97bdc67eb0d6c400d485ab28fa49d9d",
     "date": "2023-08-28T13:54:01.000+02:00",
     "bodyMessageHtml": "",
     "author": {
         "displayName": "dmitryhusev",
-        "login": "dmitryhusev",
+        "act": "running",
         "path": "/dmitryhusev",
         "avatarUrl": "https://avatars.githubusercontent.com/u/8916334?s=40&v=4"
     },
@@ -26,7 +26,13 @@ dict1 = {
             "path": "/dmitryhusev"
         },
         {
-            "hey": "prekol"
+            "hey": {
+                "prekol": [
+                    {"name": "mum"},
+                    {"two": 10000}
+                ],
+                'dratuti': 'dorov'
+                }
         }
     ],
     "committerAttribution": False,
@@ -36,37 +42,45 @@ dict1 = {
         "avatarUrl": "https://avatars.githubusercontent.com/u/8916334?v=4",
         "path": "/dmitryhusev"
     },
-    "status": None,
-    "isSpoofed": False
+    "act": "running",
+    "isSpoofed": True
 }
 
 
 
-def compare2(dict1):
+def resolve_dict(dikt: dict):
     res = []
-    # dict_resolve = deepcopy(dict1)
 
-    def _compare(dict_inner):
+    def _resolve_dict(dikt):
 
-        for k, v in dict1.items():
-            if isinstance(v, str | bool | None):
+        for k, v in dikt.items():
+            if isinstance(v, str | bool | None | int | float):
                 res.append({k: v})
                 continue
             elif isinstance(v, list):
                 for i in v:
-                    for k2, v2 in i.items():
-                        if isinstance(v2, str | bool | None):
-                            res.append({k2: v2})
-                            continue
+                    _resolve_dict(i)
             elif isinstance(v, dict):
-                    for k3, v3 in v.items():
-                        if isinstance(v3, str | bool | None):
-                            res.append({k3: v3})
-                            continue
-    _compare(dict1)
+                _resolve_dict(v)
+    _resolve_dict(dikt)
     return res
 
 
+def compare_dicts(dict1, dict2):
 
-for i in compare2(dict1):
-    print(i)
+    def _compare_dicts(record, collection):
+        for i in collection:
+            try:
+                assert i == record
+                return
+            except AssertionError:
+                continue
+        raise ValueError(f"Record {record} is not in dictionary")
+    
+    res1 = resolve_dict(dict1)
+    res2 = resolve_dict(dict2)
+
+    [_compare_dicts(i, res2) for i in res1]
+
+
+compare_dicts(dict1, dict2)
