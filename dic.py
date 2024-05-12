@@ -66,7 +66,7 @@ def resolve_dict(dikt: dict):
     return res
 
 
-def compare_dicts(dict1, dict2):
+def compare_dicts(to_check: dict, response_dict: dict):
 
     def _compare_dicts(record, collection):
         for i in collection:
@@ -77,8 +77,8 @@ def compare_dicts(dict1, dict2):
                 continue
         raise ValueError(f"Record {record} is not in dictionary")
     
-    res1 = resolve_dict(dict1)
-    res2 = resolve_dict(dict2)
+    res1 = resolve_dict(to_check)
+    res2 = resolve_dict(response_dict)
 
     [_compare_dicts(i, res2) for i in res1]
 
